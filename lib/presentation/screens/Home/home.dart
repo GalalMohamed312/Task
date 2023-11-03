@@ -1,12 +1,11 @@
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/presentation/screens/Home/services.dart';
+import 'package:task/presentation/screens/Home/slider.dart';
 import 'package:task/presentation/utils/app_colors.dart';
 import 'package:task/presentation/utils/app_strings.dart';
 import 'package:task/presentation/utils/assets.dart';
-import 'package:task/presentation/utils/media_query_values.dart';
 import 'package:task/presentation/utils/values_manager.dart';
 
 import '../../../Cubit/HomeCubit.dart';
@@ -19,8 +18,8 @@ class HomeScreen extends StatelessWidget {
   final List<Slide> slides = [
     Slide(
       image:ImageAssets.manPresenting,
-      title: 'Slide 1',
-      buttonName: 'Description 1',
+      title: TextApp.multiService,
+      buttonName: 'Order',
     ),
     Slide(
       image:ImageAssets.manPresenting,
@@ -29,8 +28,8 @@ class HomeScreen extends StatelessWidget {
     ),
     Slide(
       image:ImageAssets.manPresenting,
-      title: 'Slide 3',
-      buttonName: 'Description 3',
+      title: TextApp.multiService,
+      buttonName: 'Order',
     ),
   ];
   @override
@@ -41,82 +40,10 @@ class HomeScreen extends StatelessWidget {
         listener: (BuildContext context,HomeStates state){},
         builder: (BuildContext context,HomeStates state){
           var cubit=HomeCubit.get(context);
-          List listOfCategory=[
-            Expanded(
-              child: TextButton(
-                onPressed: () {
-                  cubit.changeTabBarIndex(0);
-                },
-                child: Container(
-                  width: double.infinity,
-                  decoration:BoxDecoration(
-                    color: cubit.tabBarCurrentIndex==0?AppColors.red: AppColors.lightGray,
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                        color:cubit.tabBarCurrentIndex==0?AppColors.red: AppColors.lightGray
-                    ),
-                    // border: BoxBorder()
-                  ),
-                  child: Center(
-                    child: Text("Categories",
-                      style: TextStyle(
-                        fontSize: AppSize.s14,
-                        fontWeight: FontWeight.w400,
-                        color:cubit.tabBarCurrentIndex==0?AppColors.white: AppColors.black, ),),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: TextButton(
-                onPressed: () {
-                  cubit.changeTabBarIndex(1);
-                },
-                child: Container(
-                  width: double.infinity,
-                  decoration:BoxDecoration(
-                    color: cubit.tabBarCurrentIndex==1?AppColors.red: AppColors.lightGray,
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                        color:cubit.tabBarCurrentIndex==1?AppColors.red: AppColors.lightGray
-                    ),
-                    // border: BoxBorder()
-                  ),
-                  child: Center(
-                    child: Text("Services",
-                      style: TextStyle(
-                        fontSize: AppSize.s14,
-                        fontWeight: FontWeight.w400,
-                        color:cubit.tabBarCurrentIndex==1?AppColors.white: AppColors.black, ),),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: TextButton(
-                onPressed: () {
-                  cubit.changeTabBarIndex(2);
-                },
-                child: Container(
-                  width: double.infinity,
-                  decoration:BoxDecoration(
-                    color: cubit.tabBarCurrentIndex==2?AppColors.red: AppColors.lightGray,
-                    borderRadius: BorderRadius.circular(15.0),
-                    border: Border.all(
-                       color:cubit.tabBarCurrentIndex==2?AppColors.red: AppColors.lightGray
-                    ),
-                    // border: BoxBorder()
-                  ),
-                  child: Center(
-                    child: Text("Orders (0)",
-                      style: TextStyle(
-                        fontSize: AppSize.s14,
-                        fontWeight: FontWeight.w400,
-                        color:cubit.tabBarCurrentIndex==2?AppColors.white: AppColors.black, ),),
-                  ),
-                ),
-              ),
-            ),
+          List<TabBar> tabBarList=[
+            TabBar(cubit: cubit, index: 0, name: "Categories"),
+            TabBar(cubit: cubit, index: 1, name: "Services"),
+            TabBar(cubit: cubit, index: 2, name: "Order (0)"),
           ];
           return  Scaffold(
             appBar: AppBar(
@@ -133,6 +60,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    //hi ahmed view
                     Row(
 
                       children: [
@@ -150,6 +78,7 @@ class HomeScreen extends StatelessWidget {
                         fontSize: AppSize.s14
                     ),),
                     const SizedBox(height: AppSize.s20,),
+                    //slider view
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.3,
                       child: PageView.builder( itemCount: slides.length,
@@ -161,6 +90,7 @@ class HomeScreen extends StatelessWidget {
                         },),
                     ),
                     const SizedBox(height:AppSize.s4),
+                    //dot indicator
                     Center(
                       child: DotsIndicator(
                         dotsCount: slides.length,
@@ -172,6 +102,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height:AppSize.s24),
+                    //tab bar
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
@@ -181,15 +112,17 @@ class HomeScreen extends StatelessWidget {
                           width: 1.0,
                         ),
                       ),
+                      //tabBAr
                       child: Row(
                         children: [
-                          listOfCategory[0],
-                          listOfCategory[1],
-                          listOfCategory[2],
+                          tabBarList[0],
+                          tabBarList[1],
+                          tabBarList[2],
                         ],
                       ),
                     ),
                     const SizedBox(height:AppSize.s16),
+                    //every tab screen
                     cubit.tabBarCurrentIndex==0?const Categories():const SizedBox(),
                     cubit.tabBarCurrentIndex==1?const Services():const SizedBox(),
                     cubit.tabBarCurrentIndex==2?const Services():const SizedBox(),
@@ -206,72 +139,37 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class Slide {
-  final String image;
-  final String title;
-  final String buttonName;
 
-  Slide({required this.image, required this.title, required this.buttonName});
-}
-
-class SlideItem extends StatelessWidget {
-  final Slide slide;
-
-  const SlideItem({Key? key, required this.slide}) : super(key: key);
-
+class TabBar extends StatelessWidget {
+  const TabBar({Key? key, required this.cubit, required this.index, required this.name}) : super(key: key);
+  final HomeCubit cubit;
+  final int index;
+  final String name;
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    return Container(
-      color: AppColors.lightRed,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const SizedBox(height: 26.0),
-                Text(
-                  slide.title,
-                  style: const TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextButton(
-                  onPressed: () {},
-
-                  style: ButtonStyle(
-                    // padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      slide.buttonName,
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                ),
-                // const SizedBox(height: 78.0),
-              ],
+    return Expanded(
+      child: TextButton(
+        onPressed: () {
+          cubit.changeTabBarIndex(index);
+        },
+        child: Container(
+          width: double.infinity,
+          decoration:BoxDecoration(
+            color: cubit.tabBarCurrentIndex==index?AppColors.red: AppColors.lightGray,
+            borderRadius: BorderRadius.circular(15.0),
+            border: Border.all(
+                color:cubit.tabBarCurrentIndex==index?AppColors.red: AppColors.lightGray
             ),
+            // border: BoxBorder()
           ),
-          const SizedBox(width: 16.0,),
-          Expanded(
-            child: Image.asset(
-              slide.image,
-              // width: mediaQuery.size.width * 0.5,
-              // height: mediaQuery.size.height * 0.5,
-            ),
+          child: Center(
+            child: Text(name,
+              style: TextStyle(
+                fontSize: AppSize.s14,
+                fontWeight: FontWeight.w400,
+                color:cubit.tabBarCurrentIndex==index?AppColors.white: AppColors.black, ),),
           ),
-
-
-        ],
+        ),
       ),
     );
   }

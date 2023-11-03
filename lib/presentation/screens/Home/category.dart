@@ -1,18 +1,24 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:task/presentation/utils/app_colors.dart';
-import 'package:task/presentation/utils/assets.dart';
 
+import 'package:flutter/material.dart';
+import 'package:task/presentation/utils/assets.dart';
 import '../../utils/values_manager.dart';
 
 class Categories extends StatelessWidget {
   const Categories({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    //list of all category buttons
+    List<Card> categoryModel=[
+      Card(categoryModel: CategoryModel(title: "Construction", image: ImageAssets.construction)),
+      Card(categoryModel:CategoryModel(title: "Insurance", image: ImageAssets.insurance)),
+      Card(categoryModel:CategoryModel(title: "Legal", image: ImageAssets.legal)),
+      Card(categoryModel:CategoryModel(title: "buy & sell", image: ImageAssets.buy)),
+      Card(categoryModel:CategoryModel(title: "Acounting & Srevices", image: ImageAssets.services)),
+    ];
+    // category view
+    return  Column(
       children: [
-        Row(
+        const Row(
           children: [
             Text("Categories view",
               style: TextStyle(
@@ -29,25 +35,29 @@ class Categories extends StatelessWidget {
               ),)
           ],
         ),
-        SizedBox(height: 16,),
-        Card(name: "Construction", image: ImageAssets.construction),
-        SizedBox(height: 16,),
-        Card(name: "Insurance", image: ImageAssets.insurance),
-        SizedBox(height: 16,),
-        Card(name: "Legal", image: ImageAssets.legal),
-        SizedBox(height: 16,),
-        Card(name: "buy & sell", image: ImageAssets.buy),
-        SizedBox(height: 16,),
-        Card(name: "Acounting & Srevices", image: ImageAssets.services),
-        SizedBox(height: 16,),
+        const SizedBox(height: 16,),
+        //view category buttons
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder:(context,index){
+          return categoryModel[index];
+        },
+        itemCount: categoryModel.length,
+          separatorBuilder: (BuildContext context, int index) {
+          return const SizedBox(height: 16,);
+          },
+
+        ),
+
       ],
     );
   }
 }
 class Card extends StatelessWidget {
-  const Card({Key? key, required this.name, required this.image}) : super(key: key);
-final String name;
-  final String image;
+  const Card({Key? key, required this.categoryModel,}) : super(key: key);
+  final CategoryModel categoryModel;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -56,7 +66,6 @@ final String name;
         color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(
-
           color: Colors.white,
           width: 1.0,
         ),
@@ -71,9 +80,9 @@ final String name;
       ),
       child: Row(
         children: [
-          Image.asset(image),
+          Image.asset(categoryModel.image),
           const SizedBox(width: 4.0,),
-          Text(name,style: const TextStyle(
+          Text(categoryModel.title,style: const TextStyle(
             fontSize: AppSize.s16,
             fontWeight: FontWeight.w400,
           ),),

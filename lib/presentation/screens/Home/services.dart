@@ -25,8 +25,8 @@ class Services extends StatelessWidget {
           fontSize: AppSize.s22,
           fontWeight: FontWeight.w700,
         ),),
-        Center(
-          child: const Text(TextApp.placrorder,style: TextStyle(
+        const Center(
+          child: Text(TextApp.placrorder,style: TextStyle(
             fontSize: AppSize.s20,
             fontWeight: FontWeight.w300,
             color: AppColors.darkGray
