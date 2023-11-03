@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/presentation/screens/Home/services.dart';
+import 'package:task/presentation/screens/Home/userCategory.dart';
 import 'package:task/presentation/utils/app_colors.dart';
 import 'package:task/presentation/utils/app_strings.dart';
 import 'package:task/presentation/utils/assets.dart';
@@ -36,11 +37,16 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  BlocProvider(
-      create: (BuildContext context) =>HomeCubit(),
+      create: (BuildContext context) =>HomeCubit()..getAllUsers(),
       child:BlocConsumer<HomeCubit,HomeStates>(
         listener: (BuildContext context,HomeStates state){},
         builder: (BuildContext context,HomeStates state){
+
           var cubit=HomeCubit.get(context);
+          print("state is =========$state");
+          if(state is GetAllUserSuccessState){
+            print(cubit.getAllUsersModel?.users[0]);
+          }
           List listOfCategory=[
             Expanded(
               child: TextButton(
@@ -190,10 +196,9 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height:AppSize.s16),
-                    cubit.tabBarCurrentIndex==0?const Categories():const SizedBox(),
+                    cubit.tabBarCurrentIndex==0? UserCategories(cubit: cubit,state: state):const SizedBox(),
                     cubit.tabBarCurrentIndex==1?const Services():const SizedBox(),
                     cubit.tabBarCurrentIndex==2?const Services():const SizedBox(),
-
                   ],
                 ),
               ),

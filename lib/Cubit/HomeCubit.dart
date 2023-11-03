@@ -1,6 +1,8 @@
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:task/network/end_points.dart';
 import 'package:task/presentation/screens/aseets.dart';
 import 'package:task/presentation/screens/Home/home.dart';
 import 'package:task/presentation/screens/profile.dart';
@@ -8,6 +10,8 @@ import 'package:task/presentation/screens/support.dart';
 import 'package:task/presentation/utils/app_colors.dart';
 import 'package:task/presentation/utils/assets.dart';
 
+import '../models/users.dart';
+import '../network/dio_helper.dart';
 import 'home_states.dart';
 
 class HomeCubit extends Cubit<HomeStates>{
@@ -46,6 +50,31 @@ void changeIndex(int index){
   void changeTabBarIndex(int index){
     tabBarCurrentIndex=index;
     emit(HomeChangeBottomNavBarState());
+  }
+
+  GetAllUsersModel? getAllUsersModel;
+  Future<void> getAllUsers()async {
+        {
+      emit(GetAllUserLoadingState());
+      await  DioHelper.getData(url: USER,
+        ).then((value){
+        getAllUsersModel = GetAllUsersModel.fromJson(value.data);
+        print("value=${value.data}");
+        // print("all activity");
+        print(getAllUsersModel!.users);
+        if(value.statusCode==200){
+          // print(value.data['message']);
+        }
+        emit(GetAllUserSuccessState());
+      }).catchError((error){
+        if(error is DioException){
+          // errorAddActivity=error.response!.data['message'][0];
+          print('error when get all Growths ${error.response!.data['message']}');
+        }
+        print("error =======$error");
+        emit(GetAllUserErrorState());
+      });
+    }
   }
 }
 
